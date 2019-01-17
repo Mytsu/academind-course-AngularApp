@@ -1,0 +1,23 @@
+.nav-caption {
+  color: #1C1C1C;
+  display: inline-block;
+  padding-left: 6px;
+  font-size: 16px;
+}
+
+.logout-button mat-icon {
+  color: #1C1C1C;
+}
+
+a,
+.logout-button {
+  text-decoration: none;
+  color: white;
+}
+
+a.active,
+a:hover,
+.logout-button:hover {
+  text-decoration: none;
+  color: lightgrey;
+}
