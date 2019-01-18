@@ -4,6 +4,7 @@ import { MatTableDataSource, MatSort, MatPaginator } from '@angular/material';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
 import { Subscription } from 'rxjs';
+import { UIService } from 'src/app/shared/ui.service';
 
 @Component({
   selector: 'app-past-trainings',
@@ -18,9 +19,15 @@ export class PastTrainingsComponent implements OnInit, OnDestroy, AfterViewInit 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private trainingService: TrainingService) {}
+  isLoading = false;
+  private loadingSub: Subscription;
+
+  constructor(private trainingService: TrainingService, private uiService: UIService) {}
 
   ngOnInit() {
+    this.loadingSub = this.uiService.loadingStateChanged.subscribe(isLoading => {
+      this.isLoading = isLoading;
+    });
     this.exercisesChanged = this.trainingService
       .finishedExercisesChanged
       .subscribe((exercises: Exercise[]) => {
@@ -30,6 +37,7 @@ export class PastTrainingsComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngOnDestroy() {
+    this.loadingSub.unsubscribe();
     this.exercisesChanged.unsubscribe();
   }
 
