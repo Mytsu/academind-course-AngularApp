@@ -2,9 +2,10 @@
   <form
     fxLayout="column"
     fxLayoutAlign="center center"
-    fxLayoutGap="10px"
+    fxLayoutGap="20px"
     [formGroup]="loginForm"
-    (ngSubmit)="onSubmit()">
+    (ngSubmit)="onSubmit()"
+    style="padding-top: 20px;">
     <mat-form-field>
       <input
         type="email"
@@ -24,12 +25,12 @@
       <mat-error>Missing password.</mat-error>
     </mat-form-field>
     <button
-      *ngIf="!isLoading"
+      *ngIf="!(isLoading$ | async)"
       type="submit"
       mat-raised-button
       color="primary"
       [disabled]="loginForm.invalid">
       Submit</button>
-    <mat-spinner *ngIf="isLoading"></mat-spinner>
+    <mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
   </form>
 </section>

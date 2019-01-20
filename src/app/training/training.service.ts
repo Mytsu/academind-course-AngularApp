@@ -34,9 +34,11 @@ export class TrainingService {
         this.uiService.loadingStateChanged.next(false);
         this.availableExercises = exercises;
         this.exercisesChanged.next([ ...this.availableExercises ]);
-      }/* , error => {
+      }, error => {
         // console.log(error);
-      } */));
+        this.uiService.loadingStateChanged.next(false);
+        this.uiService.showSnackBar('Fetching exercises failed, please try again later.', null, 3000);
+      }));
   }
 
   startExercise(selectedId: string) {
