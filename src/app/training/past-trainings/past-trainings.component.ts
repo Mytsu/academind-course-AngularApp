@@ -5,6 +5,8 @@ import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
 import { Subscription } from 'rxjs';
 import { UIService } from 'src/app/shared/ui.service';
+import { Store } from '@ngrx/store';
+import * as fromTraining from '../training.reducer';
 
 @Component({
   selector: 'app-past-trainings',
@@ -14,7 +16,6 @@ import { UIService } from 'src/app/shared/ui.service';
 export class PastTrainingsComponent implements OnInit, OnDestroy, AfterViewInit {
   displayedColumns = ['date', 'name', 'duration', 'calories', 'state'];
   dataSource = new MatTableDataSource<Exercise>();
-  private exercisesChanged: Subscription;
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -22,15 +23,16 @@ export class PastTrainingsComponent implements OnInit, OnDestroy, AfterViewInit 
   isLoading = false;
   private loadingSub: Subscription;
 
-  constructor(private trainingService: TrainingService, private uiService: UIService) {}
+  constructor(
+    private trainingService: TrainingService,
+    private uiService: UIService,
+    private store: Store<fromTraining.State>) {}
 
   ngOnInit() {
     this.loadingSub = this.uiService.loadingStateChanged.subscribe(isLoading => {
       this.isLoading = isLoading;
     });
-    this.exercisesChanged = this.trainingService
-      .finishedExercisesChanged
-      .subscribe((exercises: Exercise[]) => {
+    this.store.select(fromTraining.getFinishedExercises).subscribe((exercises: Exercise[]) => {
       this.dataSource.data = exercises;
     });
     this.trainingService.fetchExercises();
@@ -39,9 +41,6 @@ export class PastTrainingsComponent implements OnInit, OnDestroy, AfterViewInit 
   ngOnDestroy() {
     if (this.loadingSub) {
       this.loadingSub.unsubscribe();
-    }
-    if (this.exercisesChanged) {
-      this.exercisesChanged.unsubscribe();
     }
   }
 

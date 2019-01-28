@@ -2,10 +2,10 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { TrainingService } from '../training.service';
 import { Exercise } from '../exercise.model';
 import { NgForm } from '@angular/forms';
-import { Subscription, Observable } from 'rxjs';
-import { UIService } from 'src/app/shared/ui.service';
-import * as fromRoot from '../../app.reducer';
+import { Observable } from 'rxjs';
+import * as fromTraining from '../training.reducer';
 import { Store, select } from '@ngrx/store';
+import * as fromRoot from '../../app.reducer';
 
 @Component({
   selector: 'app-new-training',
@@ -15,24 +15,21 @@ import { Store, select } from '@ngrx/store';
 export class NewTrainingComponent implements OnInit {
 
   @Output() trainingStart = new EventEmitter<void>();
-  exercises: Exercise[];
-  exerciseSubscription: Subscription;
+  exercises$: Observable<Exercise[]>;
 
   isLoading$: Observable<boolean>;
   /* private loadingSub: Subscription; */
 
   constructor(
     private trainingService: TrainingService,
-    private uiService: UIService,
-    private store: Store<fromRoot.State>) { }
+    private store: Store<fromTraining.State>) { }
 
   ngOnInit() {
     this.isLoading$ = this.store.pipe(select(fromRoot.getIsLoading));
     /* this.loadingSub = this.uiService.loadingStateChanged.subscribe(isLoading => {
       this.isLoading = isLoading;
     }); */
-    this.exerciseSubscription = this.trainingService
-      .exercisesChanged.subscribe(exercises => this.exercises = exercises);
+    this.exercises$ = this.store.select(fromTraining.getAvailableExercises);
     this.fetchExercises();
   }
 
