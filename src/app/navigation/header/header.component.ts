@@ -20,16 +20,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.isAuth$ = this.store.pipe(select(fromRoot.getIsAuthenticated));
-    /* this.authSubscription = this.authService.authChange.subscribe(authStatus => {
-      this.isAuth = authStatus;
-    }); */
   }
-
-  /* ngOnDestroy(): void {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
-  } */
 
   onToggleSidenav() {
     this.sidenavToggle.emit();

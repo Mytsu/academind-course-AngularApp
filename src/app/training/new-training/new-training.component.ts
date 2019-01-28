@@ -18,7 +18,6 @@ export class NewTrainingComponent implements OnInit {
   exercises$: Observable<Exercise[]>;
 
   isLoading$: Observable<boolean>;
-  /* private loadingSub: Subscription; */
 
   constructor(
     private trainingService: TrainingService,
@@ -26,21 +25,9 @@ export class NewTrainingComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading$ = this.store.pipe(select(fromRoot.getIsLoading));
-    /* this.loadingSub = this.uiService.loadingStateChanged.subscribe(isLoading => {
-      this.isLoading = isLoading;
-    }); */
     this.exercises$ = this.store.select(fromTraining.getAvailableExercises);
     this.fetchExercises();
   }
-
-  /* ngOnDestroy() {
-    if (this.loadingSub) {
-      this.loadingSub.unsubscribe();
-    }
-    if (this.exerciseSubscription) {
-      this.exerciseSubscription.unsubscribe();
-    }
-  } */
 
   fetchExercises() {
     this.trainingService.fetchAvailableExercises();
